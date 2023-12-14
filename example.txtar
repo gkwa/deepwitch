@@ -1,0 +1,228 @@
+-- goexample1/main.go --
+package main
+
+import (
+	"fmt"
+	"os"
+	"text/template"
+)
+
+func main() {
+	type Person struct {
+		Name  string
+		Age   int
+		Email string
+	}
+
+	person := Person{Name: "John Doe", Age: 30, Email: "john@example.com"}
+	structTemplate := `
+Name: {{.Name}}
+Age: {{.Age}}
+Email: {{.Email}}
+`
+
+	tmpl, err := template.New("StructTemplate").Parse(structTemplate)
+	if err != nil {
+		fmt.Printf("Error parsing struct template: %v\n", err)
+		return
+	}
+
+	err = tmpl.Execute(os.Stdout, person)
+	if err != nil {
+		fmt.Printf("Error executing struct template: %v\n", err)
+	}
+	fmt.Println("\n------------------------")
+}
+
+-- goexample2/main.go --
+package main
+
+import (
+	"fmt"
+	"os"
+	"text/template"
+)
+
+func main() {
+	mapData := map[string]interface{}{
+		"Title":   "Page Title",
+		"Content": "Page Content",
+	}
+
+	mapTemplate := `
+Title: {{.Title}}
+Content: {{.Content}}
+`
+
+	tmpl, err := template.New("MapTemplate").Parse(mapTemplate)
+	if err != nil {
+		fmt.Printf("Error parsing map template: %v\n", err)
+		return
+	}
+
+	err = tmpl.Execute(os.Stdout, mapData)
+	if err != nil {
+		fmt.Printf("Error executing map template: %v\n", err)
+	}
+	fmt.Println("\n------------------------")
+}
+
+-- goexample3/main.go --
+package main
+
+import (
+	"fmt"
+	"os"
+	"text/template"
+)
+
+func main() {
+	stringData := "Hello, World!"
+	stringTemplate := `{{.}}`
+
+	tmpl, err := template.New("StringTemplate").Parse(stringTemplate)
+	if err != nil {
+		fmt.Printf("Error parsing string template: %v\n", err)
+		return
+	}
+
+	err = tmpl.Execute(os.Stdout, stringData)
+	if err != nil {
+		fmt.Printf("Error executing string template: %v\n", err)
+	}
+	fmt.Println("\n------------------------")
+}
+
+-- goexample4/main.go --
+package main
+
+import (
+	"fmt"
+	"os"
+	"text/template"
+)
+
+func main() {
+	sliceData := []string{"Apple", "Banana", "Orange"}
+	sliceTemplate := `
+Fruits:
+{{range .}}
+- {{.}}
+{{end}}
+`
+
+	tmpl, err := template.New("SliceTemplate").Parse(sliceTemplate)
+	if err != nil {
+		fmt.Printf("Error parsing slice template: %v\n", err)
+		return
+	}
+
+	err = tmpl.Execute(os.Stdout, sliceData)
+	if err != nil {
+		fmt.Printf("Error executing slice template: %v\n", err)
+	}
+	fmt.Println("\n------------------------")
+}
+
+-- goexample5/main.go --
+package main
+
+import (
+	"fmt"
+	"os"
+	"text/template"
+)
+
+func main() {
+	type Address struct {
+		City  string
+		State string
+	}
+
+	type Employee struct {
+		Name    string
+		Age     int
+		Address Address
+	}
+
+	employee := Employee{
+		Name: "Alice",
+		Age:  25,
+		Address: Address{
+			City:  "New York",
+			State: "NY",
+		},
+	}
+
+	embeddedStructTemplate := `
+Name: {{.Name}}
+Age: {{.Age}}
+Address:
+  City: {{.Address.City}}
+  State: {{.Address.State}}
+`
+
+	tmpl, err := template.New("EmbeddedStructTemplate").Parse(embeddedStructTemplate)
+	if err != nil {
+		fmt.Printf("Error parsing embedded struct template: %v\n", err)
+		return
+	}
+
+	err = tmpl.Execute(os.Stdout, employee)
+	if err != nil {
+		fmt.Printf("Error executing embedded struct template: %v\n", err)
+	}
+	fmt.Println("\n------------------------")
+}
+
+-- goexample6/main.go --
+package main
+
+import (
+	"fmt"
+	"os"
+	"text/template"
+)
+
+func main() {
+	intData := 42
+	intTemplate := `The answer is: {{.}}`
+
+	tmpl, err := template.New("IntTemplate").Parse(intTemplate)
+	if err != nil {
+		fmt.Printf("Error parsing int template: %v\n", err)
+		return
+	}
+
+	err = tmpl.Execute(os.Stdout, intData)
+	if err != nil {
+		fmt.Printf("Error executing int template: %v\n", err)
+	}
+	fmt.Println("\n------------------------")
+}
+
+-- goexample7/main.go --
+package main
+
+import (
+	"fmt"
+	"os"
+	"text/template"
+)
+
+func main() {
+	floatData := 3.14
+	floatTemplate := `The value of Pi is: {{.}}`
+
+	tmpl, err := template.New("FloatTemplate").Parse(floatTemplate)
+	if err != nil {
+		fmt.Printf("Error parsing float template: %v\n", err)
+		return
+	}
+
+	err = tmpl.Execute(os.Stdout, floatData)
+	if err != nil {
+		fmt.Printf("Error executing float template: %v\n", err)
+	}
+	fmt.Println("\n------------------------")
+}
