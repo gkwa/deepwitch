@@ -1,3 +1,2 @@
 Help me learn about the golang 'empty interface' by documenting a
 shitton of examples into emacs org-mode and staring atit alot.
-
