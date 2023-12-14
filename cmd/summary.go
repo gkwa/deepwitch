@@ -37,7 +37,9 @@ func init() {
 const orgTemplate = `
 ** example
 
-#+begin_example{{"\n"}}{{- .Contents -}}{{"\n"}}#+end_example
+#+begin_example
+{{ .Contents }}
+#+end_example
 `
 
 type templateData struct {
