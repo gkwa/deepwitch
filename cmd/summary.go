@@ -30,8 +30,18 @@ to quickly create a Cobra application.`,
 	},
 }
 
+const TmpDir = "tmp"
+
+var TmpDirAbsPath string
+
 func init() {
 	rootCmd.AddCommand(summaryCmd)
+	var err error
+	TmpDirAbsPath, err = filepath.Abs(TmpDir)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
 }
 
 const orgTemplate = `
@@ -48,20 +58,22 @@ type templateData struct {
 }
 
 func summary() {
-	// Define the directory path
-	dir := "/tmp/new"
+	dir := TmpDirAbsPath
 
-	// Find all main.go files in the specified directory
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		fmt.Printf("Error: The %s directory does not exist. Follow the usage instructions below:", TmpDirAbsPath)
+		printHelpMessage()
+		return
+	}
+
 	files, err := findMainGoFiles(dir)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	// Sort the file list for consistent output
 	sort.Strings(files)
 
-	// Loop through each file and print its contents in org mode format
 	for _, file := range files {
 		contents, err := readFileContents(file)
 		if err != nil {
@@ -69,16 +81,13 @@ func summary() {
 			continue
 		}
 
-		// Extract example name from the file path
 		exampleName := filepath.Base(filepath.Dir(file))
 
-		// Render the template
 		data := templateData{
 			ExampleName: exampleName,
 			Contents:    contents,
 		}
 
-		// Output in org mode format
 		err = renderTemplate(orgTemplate, data)
 		if err != nil {
 			fmt.Printf("Error rendering template for %s: %v\n", file, err)
@@ -87,7 +96,6 @@ func summary() {
 	}
 }
 
-// findMainGoFiles finds all main.go files in the specified directory and its subdirectories.
 func findMainGoFiles(dir string) ([]string, error) {
 	var files []string
 
@@ -105,7 +113,6 @@ func findMainGoFiles(dir string) ([]string, error) {
 	return files, err
 }
 
-// readFileContents reads the contents of a file and returns them as a string.
 func readFileContents(file string) (string, error) {
 	f, err := os.Open(file)
 	if err != nil {
@@ -119,13 +126,11 @@ func readFileContents(file string) (string, error) {
 		return "", err
 	}
 
-	// Trim leading and trailing whitespaces
 	contents := strings.TrimSpace(builder.String())
 
 	return contents, nil
 }
 
-// renderTemplate renders the Go template with the provided data.
 func renderTemplate(tmpl string, data templateData) error {
 	t, err := template.New("orgTemplate").Parse(tmpl)
 	if err != nil {
@@ -133,4 +138,16 @@ func renderTemplate(tmpl string, data templateData) error {
 	}
 
 	return t.Execute(os.Stdout, data)
+}
+
+func printHelpMessage() {
+	fmt.Println(`
+# usage:
+cd ~/pdev/taylormonacelli/deepwitch/
+rm -rf tmp && mkdir tmp
+txtar-x -C tmp example.txtar
+go build
+./deepwitch summary
+./deepwitch summary | pbcopy
+	`)
 }
