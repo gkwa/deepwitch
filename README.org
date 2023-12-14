@@ -1,7 +1,2 @@
-* deepwitch
+Help me learn about the golang empty interface.
 
-This is a description of my deepwitch.
-
-** Usage
-
-To use my project, run this command: ./myproject --verbose
